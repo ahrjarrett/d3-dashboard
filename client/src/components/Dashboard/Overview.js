@@ -5,72 +5,31 @@ import * as R from 'ramda'
 import { Tier } from '../../types'
 
 const merge2 = (left, right) => {
-  console.log('left', left)
-  console.log('right', right)
-
-  const rating = parseInt(left.tier) + parseInt(right.tier)
-  console.log('rating', rating)
-
-  const imp = left.impressions + right.impressions
-
-  console.log('imp', imp)
+  const tier = parseInt(right.tier)
+  const { impressions } = right
+  const grp = left.grp + tier * impressions
 
   return {
-    ...right,
-    ...left,
-    grp: (left.grp ? left.grp : 0) + rating * (imp || 1),
+    tier: R.always(left.tier),
+    impressions,
+    grp,
   }
 }
 
-const left = {
-  week: 44,
-  isoTime: 44,
-  date: 305,
-  dateTime: '2019-11-01T07:09:00.000Z',
-  stationId: 'AMC',
-  stationName: 'American Movie Classics',
-  day: 'Thursday',
-  duration: 30,
-  program: 'MOVIE',
-  dayPart: 'OVERNIGHT',
-  spent: 225,
-  impressions: 153,
-  tier: 2,
-  webVisits: 22.6,
-  sales: 1.52,
-  leads: 1.5,
-  lastUpdate: '2020-02-19T18:02:00.000Z',
-}
-
-const right = {
-  week: 44,
-  isoTime: 44,
-  date: 303,
-  dateTime: '2019-10-30T15:47:00.000Z',
-  stationId: 'AMC',
-  stationName: 'American Movie Classics',
-  day: 'Wednesday',
-  duration: 15,
-  program: 'MOVIE',
-  dayPart: 'DAYTIME',
-  spent: 455,
-  impressions: 83,
-  tier: 2,
-  webVisits: 6.46,
-  sales: 0.27,
-  leads: 0.52,
-  lastUpdate: '2020-02-19T18:02:00.000Z',
-}
-
-console.log('merge2(left, right)', merge2(left, right))
-
+const fst = R.head
 const snd = R.compose(R.head, R.tail)
+
+const reduceGRPs = R.compose(R.prop('grp'), R.reduce(merge2, { tier: 0, impressions: 0, grp: 0 }))
+const mapIndexed = R.addIndex(R.map)
+
+const calculateTotals = R.compose(reduceGRPs, R.chain(snd))
+const calculateStationTotals = R.map(R.converge(R.objOf, [fst, R.compose(reduceGRPs, snd)]))
 
 const calculateGRPs = slots => {
   console.log('slots', slots)
 
-  const calculateTotals = R.compose(R.reduce(merge2, { tier: 0, impressions: 0 }), R.tap(console.log), R.chain(snd))
   console.log('calculateTotals(slots)', calculateTotals(slots))
+  console.log('calculateStationTotals', calculateStationTotals(slots))
 
   // const aggregate = slots.reduce(
   //   (acc, [station, ads]) => {
