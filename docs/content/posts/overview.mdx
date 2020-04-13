@@ -1,0 +1,336 @@
+---
+title: Horizon Media
+date: 2020-04-12
+---
+
+import { CodeWave } from "gatsby-theme-waves"
+import { ModelTable } from 'src/components/ModelTable'
+
+# Using D3 to Build a Client Dashboard
+
+Technologies:
+- React for managing managing the DOM
+- D3 for data-visualization
+- Redux for managing state
+- GraphQL for consuming & preparing CSV data
+- Gatsby for managing asset pipeline
+- Webpack and Babel for build-time scripting
+
+## Directions
+
+Provided by the client:
+
+> Attached is some raw data what would feed the dashboard. It is spot level data, each row is a commercial that aired on TV and resulting attributed web site activity.
+
+> Below is a description of the fields that exist within the data.
+
+> Please provide a code based prototype leveraging the data for visualization in a web interface.
+
+> HINT: The data, being in the raw form, should likely be aggregated before being presented in chart or visualization. If you would like to see example from existing dashboard to indicate how we leverage this data, these can be provided.
+
+Images:
+
+<img src="https://lh3.googleusercontent.com/YDxZ2xAu_71WjXaSZo2QD_QAWs3SRK-EaJn7QSQhhptb8rN8ZP6kPKfOPzdUZEF9G9L57zjINV5KVw=w1146-h1306-rw" />
+
+<img src="https://lh4.googleusercontent.com/puAuAqBEh-Zq2Mz_qbOlog1-gP9fVUG9wCPFzyytlm8QNsAUG-Ph3-z5Y0qLZNJ-luVP9XoLAURvEVQA_fXC=w1558-h1306-rw" />
+
+<img src="https://lh4.googleusercontent.com/puAuAqBEh-Zq2Mz_qbOlog1-gP9fVUG9wCPFzyytlm8QNsAUG-Ph3-z5Y0qLZNJ-luVP9XoLAURvEVQA_fXC=w1558-h1306-rw" />
+
+<br />
+
+## Data Model
+
+Provided by the client:
+
+<hr />
+
+Table:
+
+<ModelTable />
+
+<hr />
+<br />
+
+## Notes
+
+### Processing the Data
+
+First we need to import the CSV file and prepare it for consumption on the
+client.
+
+Downloading a 40MB file in the browser, parsing it, tranforming its structure
+to be in a format our components can consume, and providing that data to our
+data store is not realistic. Even if we could guarantee that our users were on a
+gigabit network when they used our application, parsing a 40mb csv file alone
+takes 2-3 seconds, and transforming it another second.
+
+A 4-second Time to First Paint is not acceptable. We could use React Suspense to
+"render while we fetch", but even if that soften the perceived load time for the
+user: we still have a problem: the CSV file is useless
+until we've parsed and transformed it, which means our dashboard is also useless
+until then. After all, our D3 components can't "start drawing" a
+graphic until they have data that makes sense to them.
+
+We could use a Stream to render data incrementally, and a transducer to
+handle transformations (that would keep our time-complexity linear, since we
+only map over the data once); that along with a caching strategy might allow us
+to offload some of the work to the client.
+
+But when it comes to loading files over the network and processing data, I would rather keep our
+client layer thin and focused on state/rendering.
+
+I think a better approach might be letting the backend parse the data, creating
+a layer between the client and backend for handling transformations (assuming we
+expect queries to be dynamic, this would give our client more flexibility
+without requiring us to create a new endpoint every time a feature requires us
+to create a new shape for our data), and having our client simply ask for only
+the data it needs, in the shape it needs it.
+
+Not only does this mean our application loads faster, but it also allows us more
+flexibility in the long-term: Whenever we add a new data representation in the
+dashboard, we create a new mapping in our intermediate later that tells the
+server how to prepare and serve that data to the client.
+
+This is a good use-case for GraphQL, which adds this level of abstraction
+between our client and server. Note that in this example I did not store the CSV
+file in a database, because the GraphQL endpoint is agnostic: it doesn't care
+where this data comes from. Our GraphQL server handles how the data is resolved,
+and the GraphQL client (Apollo, in this case) simply asks for the data it needs, grouped and
+structured in the way it expects, all in a single round trip.
+
+This architecture is more or less extensible from here, depending on how the
+Flask endpoints were designed. Ideally it would only be responsible for parsing
+and serving data with a convenetional CRUD interface; our GraphQL server
+processes the raw data, structuring it dynamically according to the requests
+made; and our GraphQL client is the interface by which our React components ask
+for the data they want to render.
+
+Here's what our data looks like:
+
+<CodeWave>
+
+```jsx
+{
+  weekof: "2019-10-28",
+  broadcast_weekof: "2019-10-28",
+  date_aired: "2019-11-01",
+  time_aired: "2:08:00",
+  date_time_aired: "2019-11-01 2:08",
+  station_code: "RCNOV",
+  station_name: "RCN Novelas",
+  bc_day: "Thursday",
+  length: "30",
+  program_aired: "",
+  dp_aired: "OV",
+  day_part_aired: "OVERNIGHT",
+  spent: "0",
+  imp: "3",
+  tier: "HISP",
+  web_visits: "0.89",
+  sales: "0.02",
+  leads: "0.04",
+  last_update_date: "2020-02-19 12:02"
+}
+```
+
+Lorem ipsum dolor sit amet, fugit errem volumus ex sit, magna fugit deserunt et qui.Sapientem mnesarchum ei vis, offendit appetere inimicus eu has.Te utamur voluptua per.Per dicant intellegebat in.Laboramus referrentur id his, electram philosophia sit an.Possim efficiendi no sea, eu admodum copiosae indoctum mea.
+
+```js
+function HelloWorld({
+  greeting = "hello",
+  greeted = '"World"',
+  silent = false,
+  onMouseOver,
+}) {
+  if (!greeting) {
+    return null
+  }
+
+  // TODO write more code
+}
+```
+
+Sit eligendi dignissim et, sit eius ancillae voluptatibus te.Ea summo nostrum omnesque sed.Deserunt iracundia definiebas ei est.
+
+- omnesque
+  - tempor
+  - referrentur
+
+An vitae reprimique ius, facer timeam cu nam.
+
+```js
+function HelloWorld({
+  greeting = "hello",
+  greeted = '"World"',
+  silent = false,
+  onMouseOver,
+}) {
+  if (!greeting) {
+    return null
+  }
+
+  let num = 0
+
+  return (
+    <div
+      className="HelloWorld"
+      title={`You are visitor number ${ num } `}
+      onMouseOver={onMouseOver}
+    >
+      <strong>
+        {greeting.slice(0, 1).toUpperCase() +
+          greeting.slice(1).toLowerCase()}
+      </strong>
+      {greeting.endsWith(",") ? (
+        " "
+      ) : (
+        <span style={{ color: "grey" }}>
+          ", "
+        </span>
+      )}
+      <em>{greeted}</em>
+      {silent ? "." : "!"}
+    </div>
+  )
+}
+```
+
+## Id quot impetus prodesset eum
+
+  > et usu iuvaret alienum
+
+Ut amet quaerendum pro, impetus appetere disputando te per.Stet congue ancillae mei in, nam fuisset antiopam id.Ad denique blandit accommodare ius.Solum legere ea sea, per cu affert timeam, meis expetendis intellegebat ex pro.
+
+```js 11
+function HelloWorld({
+  greeting = "hello",
+  greeted = '"World"',
+  silent = false,
+  onMouseOver,
+}) {
+  if (!greeting) {
+    return null
+  }
+
+  let num = 0
+
+  return (
+    <div
+      className="HelloWorld"
+      title={`You are visitor number ${ num } `}
+      onMouseOver={onMouseOver}
+    >
+      <strong>
+        {greeting.slice(0, 1).toUpperCase() +
+          greeting.slice(1).toLowerCase()}
+      </strong>
+      {greeting.endsWith(",") ? (
+        " "
+      ) : (
+        <span style={{ color: "grey" }}>
+          ", "
+        </span>
+      )}
+      <em>{greeted}</em>
+      {silent ? "." : "!"}
+    </div>
+  )
+}
+```
+
+Nec probo paulo facilisi cu, eu nibh persecuti mea.Ut aperiam deseruisse est, eos eu delicata repudiare aliquando.Mei te justo euismod accusam, eos posse saperet elaboraret ne, mucius quodsi vocibus sit in.Mea at utinam maiorum, mei eu tale etiam.
+
+```js
+function HelloWorld({
+  greeting = "hello",
+  greeted = '"World"',
+  silent = false,
+  onMouseOver,
+}) {
+  if (!greeting) {
+    return null
+  }
+
+  // TODO: Don't use random in render
+  let num = Math.floor(Math.random() * 1e7)
+    .toString()
+    .replace(/\.\d+/gi, "")
+
+  return (
+    <div
+      className="HelloWorld"
+      title={`You are visitor number ${ num } `}
+      onMouseOver={onMouseOver}
+    >
+      <strong>
+        {greeting.slice(0, 1).toUpperCase() +
+          greeting.slice(1).toLowerCase()}
+      </strong>
+      {greeting.endsWith(",") ? (
+        " "
+      ) : (
+        <span style={{ color: "grey" }}>
+          ", "
+        </span>
+      )}
+      <em>{greeted}</em>
+      <p>LOL</p>
+      {silent ? "." : "!"}
+    </div>
+  )
+}
+```
+
+Te eos antiopam honestatis.No graeci regione nam, mea te accusam disputationi.An quo bonorum blandit honestatis, at nam wisi facilis oportere.Appetere democritum mea cu.Te tempor lobortis duo, vim an dicunt ornatus.
+
+```js 1:37
+function HelloWorld({
+  greeting = "hello",
+  greeted = '"World"',
+  silent = false,
+  onMouseOver,
+}) {
+  if (!greeting) {
+    return null
+  }
+
+  // TODO: Don't use random in render
+  let num = Math.floor(Math.random() * 1e7)
+    .toString()
+    .replace(/\.\d+/gi, "")
+
+  return (
+    <div
+      className="HelloWorld"
+      title={`You are visitor number ${ num } `}
+      onMouseOver={onMouseOver}
+    >
+      <strong>
+        {greeting.slice(0, 1).toUpperCase() +
+          greeting.slice(1).toLowerCase()}
+      </strong>
+      {greeting.endsWith(",") ? (
+        " "
+      ) : (
+        <span style={{ color: "grey" }}>
+          ", "
+        </span>
+      )}
+      <em>{greeted}</em>
+      {silent ? "." : "!"}
+    </div>
+  )
+}
+```
+
+Sit eligendi dignissim et, sit eius ancillae voluptatibus te.Ea summo nostrum omnesque sed.Deserunt iracundia definiebas ei est.
+
+</CodeWave>
+
+Lorem ipsum dolor sit amet, fugit errem volumus ex sit, magna fugit deserunt et qui.Sapientem mnesarchum ei vis, offendit appetere inimicus eu has.Te utamur voluptua per.Per dicant intellegebat in.Laboramus referrentur id his, electram philosophia sit an.Possim efficiendi no sea, eu admodum copiosae indoctum mea.
+
+Sit eligendi dignissim et, sit eius ancillae voluptatibus te.Ea summo nostrum omnesque sed.Deserunt iracundia definiebas ei est.An vitae reprimique ius, facer timeam cu nam.
+
+Id quot impetus prodesset eum, et usu iuvaret alienum.Ut amet quaerendum pro, impetus appetere disputando te per.Stet congue ancillae mei in, nam fuisset antiopam id.Ad denique blandit accommodare ius.Solum legere ea sea, per cu affert timeam, meis expetendis intellegebat ex pro.
+
+Nec probo paulo facilisi cu, eu nibh persecuti mea.Ut aperiam deseruisse est, eos eu delicata repudiare aliquando.Mei te justo euismod accusam, eos posse saperet elaboraret ne, mucius quodsi vocibus sit in.Mea at utinam maiorum, mei eu tale etiam.

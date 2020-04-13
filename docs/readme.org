@@ -1,0 +1,8 @@
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-bigblow.setup
+
+Have to manually run typecheck and use your editor to make use of TS
+typechecking/linting
+
+#+BEGIN_SRC
+npm run type:watch
+#+END_SRC
