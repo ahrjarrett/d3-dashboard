@@ -5,6 +5,11 @@ const stream = require('stream')
 const R = require('ramda')
 const moment = require('moment')
 
+const types = require('../client/src/types')
+const { Station, Tier } = types
+
+console.log('Tier', Tier)
+
 const readFile = util.promisify(fs.readFile)
 
 const log = (label, depth = null) => value =>
@@ -85,6 +90,7 @@ const xform = R.compose(
         webVisits: parseFloat,
         sales: parseFloat,
         leads: parseFloat,
+        tier: a => Tier[a],
         /*** Implicit Props: ***/
         //dayPartShort: R.identity,
         //dayPart: R.identity,

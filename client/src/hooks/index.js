@@ -7,7 +7,7 @@ import * as actions from '../store/actions'
 
 const sendErrorToLoggingService = console.log
 
-export function useFetch(url) {
+export function useFetch(url, config) {
   const storeState = useSelector(({ fetch }) => ({ pending: fetch.pending, error: fetch.error, data: fetch.data }))
   const dispatch = useDispatch()
   const setPending = pending => dispatch(actions.setPending(pending))
@@ -19,9 +19,11 @@ export function useFetch(url) {
 
     setPending(true)
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, { ...config })
+
       const data = await response.json()
 
+      console.log('response', response)
       console.log('data', data)
 
       setData(data)
@@ -36,13 +38,6 @@ export function useFetch(url) {
   useEffect(() => {
     fetchData()
   }, [])
-
-  // useEffect(() => {
-  //   if (R.equals(state, storeState)) return
-  //   if (state.pending !== storeState.pending) setPending(state.pending)
-  //   if (state.error !== storeState.error) setPending(state.error)
-  //   if (state.data !== storeState.data) setPending(state.data)
-  // })
 
   return storeState
 }

@@ -13,6 +13,7 @@ const stringify = require('csv').stringify
 const parse = require('csv-parse')
 
 const types = require('../client/src/types')
+const { Station, Tier } = types
 const utils = require('./utils')
 
 const brotliSettings = {
@@ -22,8 +23,6 @@ const brotliSettings = {
   quality: 10,
   lgwin: 12,
 }
-
-const { Station, Tier } = types
 
 const dataDir = path.resolve(__dirname, 'data')
 const inputFilePath = path.resolve(__dirname, 'data', 'mock_data.SAMPLE.csv')
