@@ -20,8 +20,8 @@ export default function Router() {
     document.body.margin = 0
     document.body.height = '100vh'
     document.body.width = '100vw'
-    document.body.overfl = 'hidden'
-  }, [])
+    document.body.overflow = 'hidden'
+  })
 
   return (
     <ErrorBoundary name='RouterErrorBoundary'>

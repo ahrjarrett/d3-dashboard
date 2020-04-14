@@ -20,13 +20,41 @@ export const PageContainer = styled.main`
   background-color: #708090;
   background-size: 64px 128px;
 
-  .chart {
-    font: 10px sans-serif;
+  *,
+  div * {
+    position: relative;
+    z-index: 1000;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  .text,
+  pre,
+  code {
+    z-index: 1010;
+  }
+
+  svg,
+  svg *,
+  svg > {
+    position: relative;
+    z-index: 2000;
+  }
+
+  rect.chart {
+    fon: 10px sans-serif;
     background-color: steelblue;
     text-align: right;
     padding: 3px;
     margin: 1px;
     color: white;
+    position: relative;
+    z-index: 101;
   }
 `
 
@@ -36,7 +64,7 @@ export const Container = styled(S.Container)`
 
 export const ChartTitle = styled.div`
   text-align: center;
-  font-size: 2.5em;
+  font-size: 2.25em;
   position: absolute;
   display: flex;
   align-items: flex-start;
@@ -109,12 +137,16 @@ export const StationLink = styled.ul`
   position: absolute;
   z-index: 100;
   top: 0;
-  left: 0;
-  background: white;
+  right: 0;
+  background: blanchedalmond;
 
   flex-direction: column;
   width: 90px;
   max-height: 120vh;
   overflow-y: scroll;
   height: 100vh;
+`
+
+export const Text = styled.p`
+  text-align: ;
 `
