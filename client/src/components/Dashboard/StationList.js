@@ -6,7 +6,7 @@ import { Station } from '../../types'
 
 const StationLink = ({ station }) => (
   <Link to={`/dashboard/${station}`}>
-    <a>{station}</a>
+    <span>{station}</span>
   </Link>
 )
 

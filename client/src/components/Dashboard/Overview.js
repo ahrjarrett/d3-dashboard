@@ -8,11 +8,14 @@ import { SimpleChart } from './SimpleChart'
 import { Tier } from '../../types'
 import { useGRPs } from '../../hooks'
 
+const margin = { top: 0, bottom: 0, left: 0, right: 0 }
+
 export function Overview({ data }) {
   const grps = useGRPs(['44', '52'], data)
   return (
     <div>
-      <SimpleChart width={800} height={600} margin={0} />
+      <GRPsChart grps={grps}>Overview</GRPsChart>
+      <SimpleChart width={800} height={600} margin={margin} />
     </div>
   )
 }

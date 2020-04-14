@@ -37,16 +37,6 @@ function useOverviewGraph(interval, grps) {
     R.keys,
   )(data)
 
-  d3.select('body')
-    .append('svg')
-    .attr('width', 50)
-    .attr('height', 50)
-    .append('circle')
-    .attr('cx', 25)
-    .attr('cy', 25)
-    .attr('r', 25)
-    .style('fill', 'purple')
-
   const weeks = keys.slice(0, interval)
 
   const overviewData = R.compose(
@@ -65,7 +55,11 @@ export const GRPsChart = ({ grps }) => {
 
   return (
     <S.PageContainer>
-      <S.ChartTitle>GRPs Overview: {Station[stationId]}</S.ChartTitle>
+      <S.ChartTitle>
+        GRPs Overview:
+        <br />
+        {Station[stationId]}
+      </S.ChartTitle>
       <S.Graphic>
         <S.GRPsChartWrapper id={OVERVIEW_GRAPH}></S.GRPsChartWrapper>
       </S.Graphic>

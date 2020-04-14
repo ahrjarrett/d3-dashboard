@@ -23,7 +23,7 @@ export const PageContainer = styled.main`
   *,
   div * {
     position: relative;
-    z-index: 1000;
+    z-index: 1;
   }
   h1,
   h2,
@@ -74,9 +74,9 @@ export const ChartTitle = styled.div`
   height: 100%;
 `
 export const Graphic = styled.div`
-  // top: 6em;
   width: calc(100% - 40px);
   margin: 20px;
+  z-index: 0;
   height: 480px;
 `
 
@@ -135,7 +135,7 @@ export const StationLink = styled.ul`
   padding-top: 35px;
   padding-left: 50px;
   position: absolute;
-  z-index: 100;
+  z-index: 9000;
   top: 0;
   right: 0;
   background: blanchedalmond;
