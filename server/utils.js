@@ -9,8 +9,6 @@ const _id = require('shortid')
 const types = require('../client/src/types')
 const { Station, Tier } = types
 
-console.log('Tier', Tier)
-
 const readFile = util.promisify(fs.readFile)
 
 const log = (label, depth = null) => value =>

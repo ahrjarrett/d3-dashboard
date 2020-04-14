@@ -16,6 +16,13 @@ const RedirectToSelectStation = () => {
 }
 
 export default function Router() {
+  React.useLayoutEffect(() => {
+    document.body.margin = 0
+    document.body.height = '100vh'
+    document.body.width = '100vw'
+    document.body.overfl = 'hidden'
+  }, [])
+
   return (
     <ErrorBoundary name='RouterErrorBoundary'>
       <Suspense fallback={renderLoader()}>

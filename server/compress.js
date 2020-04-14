@@ -12,9 +12,10 @@ const brotli = require('brotli')
 const stringify = require('csv').stringify
 const parse = require('csv-parse')
 
+const utils = require('./utils')
 const types = require('../client/src/types')
 const { Station, Tier } = types
-const utils = require('./utils')
+import { useFetch } from '../../hooks'
 
 const brotliSettings = {
   extension: 'br',
@@ -41,7 +42,6 @@ async function compress() {
     // creates gzip file in case browser doesn't support .br files:
     readable.pipe(gzip).pipe(writeable)
     writeable.on('finish', () => {
-      console.log(`gzip file written: \n${outputFilePath}`)
       writeable.end()
     })
   }

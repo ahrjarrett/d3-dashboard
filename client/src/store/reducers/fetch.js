@@ -13,9 +13,6 @@ const initialState = () => ({
 })
 
 export default function createFetchReducer(slice, initialState) {
-  console.log('slice', slice)
-  console.log('initialState', initialState)
-
   return function(state = initialState, { type, payload }) {
     switch (type) {
       case `T.${slice}_SET_PENDING`:

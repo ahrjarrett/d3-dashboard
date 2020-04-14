@@ -34,8 +34,8 @@ const columns = [
 
 const spreadListIntoMap = R.reduce(R.merge, {})
 
-const parser = parse({ columns, relax_column_count: true })
-const readable = fs.createReadStream(inputFilePath, { encoding: 'utf8' })
+const parser = parse({columns, relax_column_count: true})
+const readable = fs.createReadStream(inputFilePath, {encoding: 'utf8'})
 
 const groupings = [R.prop('stationId'), R.prop('week')]
 
@@ -51,18 +51,16 @@ module.exports = async function transform(dataKey) {
         R.tail(results),
       )
 
-      console.log('output', output)
-
       const stations = new Set(Object.keys(output))
 
       // Get unique stations
       const stationMap = R.compose(
         spreadListIntoMap,
-        R.map(value => ({ [value]: value })),
+        R.map(value => ({[value]: value})),
       )([...stations])
 
       stations.forEach(station => {
-        console.log(`writing ${station}.json`)
+        console.log(`Writing ${station}.json...`)
         fs.writeFileSync(
           `./data/station/${station}.json`,
           JSON.stringify(output[station]),

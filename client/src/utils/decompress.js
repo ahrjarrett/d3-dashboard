@@ -35,19 +35,12 @@ const utf8ArrayToStr = () => {
 }
 
 export const unzip = data => {
-  //if your data not a base64 then comment this line //
   let compressData = atob(data)
-
-  // let compressData = data.split('').map(function(e) {
-  //   return e.charCodeAt(0)
-  // })
 
   let binData = new Uint8Array(compressData)
 
   gunzip(binData, function(err, dezipped) {
     const str = utf8ArrayToStr(dezipped)
-    console.log('str', str)
-
     return str
   })
 }

@@ -1,28 +1,26 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import * as d3 from 'd3'
 
 import { Overview } from './Overview'
 import { StationList } from './StationList'
 import { useFetch } from '../../hooks'
 import { STATICDIR, SERVER_URL } from '../../config'
+import { Station } from '../../types'
 import { DashboardLoader } from '../loaders'
 import * as S from '../../styled'
-import Papa from 'papaparse'
+import * as R from 'ramda'
 
 export function Dashboard() {
   const { stationId } = useParams()
   const [{ pending, data, error }, dispatch, refetch] = useFetch(`${STATICDIR}station/${stationId}.json`, 'OVERVIEW', {
     resonseType: 'stream',
   })
+  const stationMap = R.map(value => ({ [value]: [value.toString()] }))(Station)
 
-  // TODO: Add some client-side caching to make sure we don't refetch data unless the cache has been invalidated
   useEffect(() => {
     refetch()
   }, [stationId /* refetch */])
-
-  const stationMap = useFetch(`${STATICDIR}stationMap.json`, 'STATIONMAP', { resonseType: 'stream' })
-
-  console.log('stationMap', stationMap)
 
   return pending ? (
     <DashboardLoader />
@@ -31,7 +29,6 @@ export function Dashboard() {
       <div>Dashboard</div>
       <StationList stationMap={stationMap.data} />
       <Overview data={data} />
-      <svg />
     </S.Container>
   )
 }

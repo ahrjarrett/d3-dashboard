@@ -10,6 +10,7 @@
     "@welldone-software/why-did-you-render": "^3.3.3",
     "connected-react-router": "^6.5.2",
     "d3": "^5.15.1",
+    "d3-time": "^1.1.0",
     "faker": "^4.1.0",
     "history": "^4.9.0",
     "moment": "^2.24.0",

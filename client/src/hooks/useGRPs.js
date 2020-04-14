@@ -26,6 +26,7 @@ const reduceGRPs = R.compose(R.prop('grp'), R.reduce(merge2, grpInitialState))
 
 const calculateTotals = R.compose(reduceGRPs, R.chain(snd))
 const calculateStationTotals = R.map(reduceGRPs)
+
 //const calculateStationTotals = R.map(R.converge(R.objOf, [fst, R.compose(reduceGRPs, snd)]))
 
 const calculateGRPs = slots => ({
@@ -34,27 +35,14 @@ const calculateGRPs = slots => ({
 })
 
 export function useGRPs(wks, data) {
-  useEffect(() => {
-    console.log('useGRPs is re-rendering!')
-    console.log('wks', wks)
-    console.log('data', data)
-  })
-
   const [weeks] = useState(wks)
   const filteredWeeks = weeks.map(week => ({ [week]: data[week] }))
 
   const flattenWeeks = spreadListIntoMap
   const flatWeeks = flattenWeeks(filteredWeeks)
 
-  console.log('weeks', weeks)
-  console.log('filteredWeeks', filteredWeeks)
-  console.log('flatWeeks', flatWeeks)
-
   const calculateGRPs = slots => {
-    console.log('slots', slots)
-
     const stationTotals = calculateStationTotals(slots)
-    console.log('\n\nstationTotals', stationTotals)
     return {
       total: calculateTotals(slots),
       byStation: stationTotals,
