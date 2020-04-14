@@ -9,12 +9,16 @@ const sendErrorToLoggingService = console.log
 
 export { useGRPs } from './useGRPs'
 
-export function useFetch(url, config) {
-  const storeState = useSelector(({ fetch }) => ({ pending: fetch.pending, error: fetch.error, data: fetch.data }))
+export function useFetch(url, stateString, config) {
+  const storeState = useSelector(state => ({
+    pending: state.fetch[stateString].pending,
+    error: state.fetch[stateString].error,
+    data: state.fetch[stateString].data,
+  }))
   const dispatch = useDispatch()
-  const setPending = pending => dispatch(actions.setPending(pending))
-  const setError = error => dispatch(actions.setError(error))
-  const setData = data => dispatch(actions.setData(data))
+  const setPending = pending => dispatch(actions.setPending(stateString, pending))
+  const setError = error => dispatch(actions.setError(stateString, error))
+  const setData = data => dispatch(actions.setData(stateString, data))
 
   async function fetchData() {
     console.log('calling fetchData')

@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as R from 'ramda'
+
+import { spreadListIntoMap } from '../utils'
 
 const merge2 = (left, right) => {
   const tier = parseInt(right.tier)
@@ -23,7 +25,8 @@ const grpInitialState = { tier: 0, impressions: 0, grp: 0 }
 const reduceGRPs = R.compose(R.prop('grp'), R.reduce(merge2, grpInitialState))
 
 const calculateTotals = R.compose(reduceGRPs, R.chain(snd))
-const calculateStationTotals = R.map(R.converge(R.objOf, [fst, R.compose(reduceGRPs, snd)]))
+const calculateStationTotals = R.map(reduceGRPs)
+//const calculateStationTotals = R.map(R.converge(R.objOf, [fst, R.compose(reduceGRPs, snd)]))
 
 const calculateGRPs = slots => ({
   total: calculateTotals(slots),
@@ -31,17 +34,32 @@ const calculateGRPs = slots => ({
 })
 
 export function useGRPs(wks, data) {
+  useEffect(() => {
+    console.log('useGRPs is re-rendering!')
+    console.log('wks', wks)
+    console.log('data', data)
+  })
+
   const [weeks] = useState(wks)
   const filteredWeeks = weeks.map(week => ({ [week]: data[week] }))
+
+  const flattenWeeks = spreadListIntoMap
+  const flatWeeks = flattenWeeks(filteredWeeks)
+
   console.log('weeks', weeks)
   console.log('filteredWeeks', filteredWeeks)
+  console.log('flatWeeks', flatWeeks)
 
-  const flattenWeeks = R.compose(R.toPairs, R.head, R.values, R.head)
-  const flatWeeks = flattenWeeks(filteredWeeks)
-  const calculateGRPs = slots => ({
-    total: calculateTotals(slots),
-    byStation: calculateStationTotals(slots),
-  })
+  const calculateGRPs = slots => {
+    console.log('slots', slots)
+
+    const stationTotals = calculateStationTotals(slots)
+    console.log('\n\nstationTotals', stationTotals)
+    return {
+      total: calculateTotals(slots),
+      byStation: stationTotals,
+    }
+  }
 
   return calculateGRPs(flatWeeks)
 }

@@ -1,21 +1,34 @@
 import * as T from '../types'
 import { combineReducers } from 'redux'
 
-const initialState = {
+const stateInitializer = {
   pending: false,
   error: null,
   data: null,
 }
 
-export default function(state = initialState, { type, payload }) {
-  switch (type) {
-    case T.SET_PENDING:
-      return { ...state, pending: payload }
-    case T.SET_ERROR:
-      return { ...state, error: payload }
-    case T.SET_DATA:
-      return { ...state, data: payload }
-    default:
-      return state
+const initialState = () => ({
+  STATIONMAP: { ...stateInitializer },
+  OVERVIEW: { ...stateInitializer },
+})
+
+export default function createFetchReducer(slice, initialState) {
+  console.log('slice', slice)
+  console.log('initialState', initialState)
+
+  return function(state = initialState, { type, payload }) {
+    switch (type) {
+      case `T.${slice}_SET_PENDING`:
+        return { ...state, pending: payload }
+      case `T.${slice}_SET_ERROR`:
+        return { ...state, error: payload }
+      case `T.${slice}_SET_DATA`:
+        return { ...state, data: payload }
+      default:
+        return state
+    }
   }
 }
+
+export const overviewReducer = createFetchReducer('OVERVIEW', stateInitializer)
+export const stationMapReducer = createFetchReducer('STATIONMAP', stateInitializer)

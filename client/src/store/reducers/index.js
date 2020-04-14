@@ -2,11 +2,14 @@ import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux'
 
 import ui from './ui'
-import fetch from './fetch'
+import { overviewReducer as overview, stationMapReducer as stationMap } from './fetch'
 
 export default history =>
   combineReducers({
     router: connectRouter(history),
     ui,
-    fetch,
+    fetch: combineReducers({
+      OVERVIEW: overview,
+      STATIONMAP: stationMap,
+    }),
   })

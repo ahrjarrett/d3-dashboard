@@ -7,6 +7,6 @@ import { Tier } from '../../types'
 import { useGRPs } from '../../hooks'
 
 export function Overview({ data }) {
-  const grps = useGRPs(['44'], data)
+  const grps = useGRPs(['44', '52'], data)
   return <GRPsChart grps={grps}>Overview</GRPsChart>
 }
