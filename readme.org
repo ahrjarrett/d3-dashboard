@@ -1,0 +1,24 @@
+* Make it go
+
+1. Install dependencies on the client and server. I'm on Node
+   12.16.1, but you should be fine with LTS or later.
+2. Run the transform command on the backend to prepare the data to be served
+
+3. Start the server in watch mode with `npm run dev`
+
+4. Start the client in watch mode with `npm run start`
+
+Navigate to http://localhost:3000 to see the frontend
+
+** Known bugs
+
+- Switching between routes/stations too quickly can cause the app to crash. This
+  is something I noticed at the end, and did not have much time to investigate.
+- File streaming had several bugs in it last I checked, so the default
+  configuration for now is running a one-time command that groups the dataset by
+  week of airdate, and then by the station that paid for the ad.
+
+- The time-consuming part was the problem of getting the data to the client, and not so
+  much creating visual representations of the data. If I could start over I
+  would invest time in setting up a database, because in the long run that would
+  have saved me time.
