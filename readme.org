@@ -1,4 +1,4 @@
-* Make it go
+** How to make it go
 
 1. Install dependencies on the client and server. I'm on Node
    12.16.1, but you should be fine with LTS or later.
@@ -20,5 +20,14 @@ Navigate to http://localhost:3000 to see the frontend
 
 - The time-consuming part was the problem of getting the data to the client, and not so
   much creating visual representations of the data. If I could start over I
-  would invest time in setting up a database, because in the long run that would
-  have saved me time.
+  would invest time in setting up a database from the beginning, I think that
+  would have saved me time in the long run.
+
+** Style
+
+I try to write pointfree code when I can. In my experience with greenroots
+projects, this has been an effective way to stay flexible and delay having to
+name things until later on. It's been an effective way to avoid getting tied
+down to a particular approach early on, but I'm also cognizant of the fact that
+not everybody understands it right away -- I would discuss with my team before
+making assumptions about what everyone is comfortable with, as every team is different.
