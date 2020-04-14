@@ -26,7 +26,6 @@ export function Dashboard() {
     <DashboardLoader />
   ) : !data ? null : (
     <S.Container>
-      <div>Dashboard</div>
       <StationList stationMap={stationMap.data} />
       <Overview data={data} />
     </S.Container>

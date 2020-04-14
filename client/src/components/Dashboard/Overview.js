@@ -15,7 +15,7 @@ export function Overview({ data }) {
   return (
     <div>
       <GRPsChart grps={grps}>Overview</GRPsChart>
-      <SimpleChart width={800} height={600} margin={margin} />
+      <SimpleChart width={500} height={500} margin={margin} />
     </div>
   )
 }

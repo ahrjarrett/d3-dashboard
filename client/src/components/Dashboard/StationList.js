@@ -15,9 +15,12 @@ export const StationList = ({ stationMap }) => {
 
   return (
     <S.StationLink>
-      {stations.map(station => (
-        <StationLink key={station} station={station} />
-      ))}
+      <p>Stations</p>
+      <>
+        {stations.map(station => (
+          <StationLink key={station} station={station} />
+        ))}
+      </>
     </S.StationLink>
   )
 }

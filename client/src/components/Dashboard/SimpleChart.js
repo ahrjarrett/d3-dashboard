@@ -2,13 +2,16 @@ import React, { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import * as d3 from 'd3'
 import * as R from 'ramda'
+import * as S from './styled'
 
 import { Station } from '../../types'
 
 import { getDateFromWeekNumber, spreadListIntoMap } from '../../utils'
 
 export function SimpleChart({ width, height, margin }) {
-  const svg = d3.create('svg').attr('viewBox', [0, 0, width, height])
+  const ref = React.useRef()
+  const svg = d3.select(ref.current).attr('viewBox', [0, 0, 600, 600])
+  //const svg = d3.create('svg').attr('viewBox', [0, 0, width, height])
   const overviewSelector = state => Object.keys(state.fetch.OVERVIEW.data).map(w => state.fetch.OVERVIEW.data[w])
 
   const d = useSelector(overviewSelector)
@@ -56,34 +59,38 @@ export function SimpleChart({ width, height, margin }) {
 
   const gy = svg.append('g').call(yAxis)
 
-  const obj = Object.assign(svg.node(), {
-    update(order) {
-      x.domain(data.sort(order).map(R.head))
+  function makeSvg() {
+    return Object.assign(svg.node(), {
+      update(order) {
+        x.domain(data.sort(order).map(R.head))
 
-      const t = svg.transition().duration(750)
+        const t = svg.transition().duration(750)
 
-      bar
-        .data(data, R.head)
-        .order()
-        .transition(t)
-        .delay((d, i) => i * 20)
-        .attr('x', d => x(d.name))
+        bar
+          .data(data, R.head)
+          .order()
+          .transition(t)
+          .delay((d, i) => i * 20)
+          .attr('x', d => x(d.name))
 
-      gx.transition(t)
-        .call(xAxis)
-        .selectAll('.tick')
-        .delay((d, i) => i * 20)
-    },
-  })
+        gx.transition(t)
+          .call(xAxis)
+          .selectAll('.tick')
+          .delay((d, i) => i * 20)
+      },
+    })
+  }
 
-  console.log('obj', obj)
-
-  return () => obj
+  return (
+    <S.Svg>
+      <svg ref={ref} />
+    </S.Svg>
+  )
 }
 
 const defaultMargin = { top: 0, bottom: 0, left: 0, right: 0 }
-const defaultWidth = 800
-const defaultHeight = 600
+const defaultWidth = 500
+const defaultHeight = 500
 
 SimpleChart.defaultProps = {
   margin: defaultMargin,

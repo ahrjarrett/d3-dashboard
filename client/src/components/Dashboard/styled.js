@@ -17,7 +17,6 @@ export const PageContainer = styled.main`
   left: 0;
   right: 0;
   font-family: 'Roboto';
-  background-color: #708090;
   background-size: 64px 128px;
 
   *,
@@ -42,7 +41,7 @@ export const PageContainer = styled.main`
   svg,
   svg *,
   svg > {
-    position: relative;
+    position: absolute;
     z-index: 2000;
   }
 
@@ -68,7 +67,7 @@ export const ChartTitle = styled.div`
   position: absolute;
   display: flex;
   align-items: flex-start;
-  margin-top: 12.5%;
+  margin-top: 60px;
   justify-content: center;
   width: 100%;
   height: 100%;
@@ -94,7 +93,7 @@ const axesFlattenableCss = css`
 `
 
 export const GRPsChartWrapper = styled.div`
-  height: 560px;
+  height: 1000px;
   width: 900px;
   background-color: #fff;
   padding: 20px 20px 20px 20px;
@@ -104,10 +103,11 @@ export const GRPsChartWrapper = styled.div`
 
   @media (min-width: 1000px) {
     box-shadow: 2px 2px 20px;
-    width: 50%;
+    width: 60%;
     display: flex;
-    margin-left: 25%;
-    margin-top: 9%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
   }
 `
 
@@ -149,4 +149,13 @@ export const StationLink = styled.ul`
 
 export const Text = styled.p`
   text-align: ;
+`
+
+export const Svg = styled.div`
+  width: 500px;
+  height: 300px;
+  position: absolute;
+  z-index: 9000;
+  top: 35%;
+  left: 35%;
 `
