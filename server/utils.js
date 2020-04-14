@@ -4,6 +4,7 @@ const util = require('util')
 const stream = require('stream')
 const R = require('ramda')
 const moment = require('moment')
+const _id = require('shortid')
 
 const types = require('../client/src/types')
 const { Station, Tier } = types
@@ -52,55 +53,41 @@ const groupByMultiple = R.curry((fields, data) => {
   return groupBy(groupByMultiple(R.init(fields), data))
 })
 
-const _xform = d => ({
-  dateTime: moment(d.date_aired).valueOf(),
-  lastUpdate: moment(d.last_update_date).valueOf(),
-  dayPart: d.dp_aired,
-  station: Station[d.station_code],
-  program: d.program,
-  tier: Tier[d.tier],
-  duration: parseInt(d.length, 10),
-  spent: parseFloat(d.spent, 10),
-  impressions: parseFloat(d.imp, 10),
-  webVisits: parseFloat(d.web_visits, 10),
-  sales: parseFloat(d.sales, 10),
-  leads: parseFloat(d.leads, 10),
-})
-
 const parseDate = a => moment(a)
 // parseFloat already named like we want
 const parseInteger = R.flip(R.curry(parseInt))(10)
 
-const groupBys = [R.prop('week'), R.prop('stationId')]
-
-const xform = R.compose(
-  groupByMultiple(groupBys),
-  R.tail,
-  R.map(
-    R.compose(
-      R.evolve({
-        week: a => moment(a).week(),
-        isoTime: a => moment(a).isoWeek(),
-        date: a => moment(a).dayOfYear(),
-        dateTime: a => moment(new Date(a))._d,
-        lastUpdate: a => moment(new Date(a))._d,
-        spent: parseFloat,
-        duration: parseInteger,
-        impressions: parseFloat,
-        webVisits: parseFloat,
-        sales: parseFloat,
-        leads: parseFloat,
-        tier: a => Tier[a],
-        /*** Implicit Props: ***/
-        //dayPartShort: R.identity,
-        //dayPart: R.identity,
-        //tier: R.identity,
-        //program: R.identity,
-      }),
-      R.omit(['time', 'dayPartShort']),
+const xform = groupingsList => implicitDataset =>
+  R.compose(
+    R.tap(log('in xform')),
+    groupByMultiple(groupingsList),
+    R.tail,
+    R.map(
+      R.compose(
+        R.evolve({
+          week: a => moment(a).week(),
+          isoTime: a => moment(a).isoWeek(),
+          date: a => moment(a).dayOfYear(),
+          dateTime: a => moment(new Date(a))._d,
+          lastUpdate: a => moment(new Date(a))._d,
+          spent: parseFloat,
+          duration: parseInteger,
+          impressions: parseFloat,
+          webVisits: parseFloat,
+          sales: parseFloat,
+          leads: parseFloat,
+          tier: a => Tier[a],
+          /*** Implicit Props: ***/
+          //dayPartShort: R.identity,
+          //dayPart: R.identity,
+          //tier: R.identity,
+          //program: R.identity,
+        }),
+        R.omit([...groupingsList]),
+        R.assoc('id', _id.generate()),
+      ),
     ),
-  ),
-)
+  )(implicitDataset)
 
 module.exports = {
   drain,

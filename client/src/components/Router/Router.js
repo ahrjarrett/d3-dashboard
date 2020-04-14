@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Redirect } from 'react-router-dom'
 import moment from 'moment'
 
 import App from '../App'
@@ -11,12 +11,23 @@ const renderEnv = match => {
   return <h2>Environment: {match.params.env}</h2>
 }
 
+const RedirectToSelectStation = () => {
+  return <Redirect to='/dashboard/HGTV' />
+}
+
 export default function Router() {
   return (
     <ErrorBoundary name='RouterErrorBoundary'>
       <Suspense fallback={renderLoader()}>
-        <Route exact path='/' component={Home} />
-        <Route path='/dashboard' component={App} />
+        <Route exact path='/'>
+          <Home />
+        </Route>
+        <Route path='/dashboard'>
+          <RedirectToSelectStation />
+        </Route>
+        <Route path='/dashboard/:stationId'>
+          <App />
+        </Route>
         <Route path='/__/:env' render={({ match }) => renderEnv(match)} />
       </Suspense>
     </ErrorBoundary>
@@ -66,15 +77,6 @@ const model = {
     /***  TODO: Remove later ***/
     station_name: 'RCN Novelas', // StationName<String>
     broadcast_weekof: moment(d.broadcast_weekof).isoWeek(), // Int
-
-    /*** REMOVE: ***/
-    //week: moment(d.weekof).week(),
-    //isoWeek: moment(d.weekof).isoWeek(),
-    //date: moment(d.date_aired).dayOfYear(),
-    //time: '2:08:00',
-    //day: 'Thursday',
-    //day_part: 'OV',
-    //date_time_aired: '2019-11-01 2:08',
   },
 }
 

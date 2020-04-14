@@ -7,6 +7,8 @@ import * as actions from '../store/actions'
 
 const sendErrorToLoggingService = console.log
 
+export { useGRPs } from './useGRPs'
+
 export function useFetch(url, config) {
   const storeState = useSelector(({ fetch }) => ({ pending: fetch.pending, error: fetch.error, data: fetch.data }))
   const dispatch = useDispatch()
