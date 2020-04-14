@@ -1,16 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { Station } from '../../types'
+
 const StationLink = ({ station }) => (
-  <Link to='/dashboard/${station}'>
-    <a href='#'>{station}</a>
+  <Link to={`/dashboard/${station}`}>
+    <a>{station}</a>
   </Link>
 )
 
 export const StationList = ({ stationMap }) => {
-  return !stationMap ? null : (
+  React.useEffect(() => {
+    console.log('re-rendering StationList')
+
+    console.log('stationMap', stationMap)
+  })
+
+  const stations = Object.keys(stationMap || Station)
+
+  return (
     <ul>
-      {Object.keys(stationMap).map(station => (
+      {stations.map(station => (
         <StationLink key={station} station={station} />
       ))}
     </ul>

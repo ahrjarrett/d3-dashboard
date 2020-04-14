@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { Overview } from './Overview'
@@ -10,11 +10,19 @@ import * as S from '../../styled'
 import Papa from 'papaparse'
 
 export function Dashboard() {
-  const params = useParams()
-  const { pending, data, error } = useFetch(`${STATICDIR}station/${params.stationId}.json`, 'OVERVIEW', {
+  const { stationId } = useParams()
+  const [{ pending, data, error }, dispatch, refetch] = useFetch(`${STATICDIR}station/${stationId}.json`, 'OVERVIEW', {
     resonseType: 'stream',
   })
+
+  // TODO: Add some client-side caching to make sure we don't refetch data unless the cache has been invalidated
+  useEffect(() => {
+    refetch()
+  }, [stationId /* refetch */])
+
   const stationMap = useFetch(`${STATICDIR}stationMap.json`, 'STATIONMAP', { resonseType: 'stream' })
+
+  console.log('stationMap', stationMap)
 
   return pending ? (
     <DashboardLoader />

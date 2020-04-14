@@ -24,6 +24,8 @@ export default function createFetchReducer(slice, initialState) {
         return { ...state, error: payload }
       case `T.${slice}_SET_DATA`:
         return { ...state, data: payload }
+      case `T.${slice}_RESET`:
+        return initialState
       default:
         return state
     }

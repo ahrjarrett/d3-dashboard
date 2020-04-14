@@ -19,19 +19,13 @@ export function useFetch(url, stateString, config) {
   const setPending = pending => dispatch(actions.setPending(stateString, pending))
   const setError = error => dispatch(actions.setError(stateString, error))
   const setData = data => dispatch(actions.setData(stateString, data))
+  const reset = () => dispatch(actions.reset(stateString))
 
   async function fetchData() {
-    console.log('calling fetchData')
-
     setPending(true)
     try {
       const response = await fetch(url, { ...config })
-
       const data = await response.json()
-
-      console.log('response', response)
-      console.log('data', data)
-
       setData(data)
     } catch (e) {
       sendErrorToLoggingService(e)
@@ -45,7 +39,7 @@ export function useFetch(url, stateString, config) {
     fetchData()
   }, [])
 
-  return storeState
+  return [storeState, dispatch, optionalArgs => fetchData(optionalArgs)]
 }
 
 export function useAutofocus(elementId) {
