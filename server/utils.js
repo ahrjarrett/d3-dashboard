@@ -59,7 +59,6 @@ const parseInteger = R.flip(R.curry(parseInt))(10)
 
 const xform = groupingsList => implicitDataset =>
   R.compose(
-    R.tap(log('in xform')),
     groupByMultiple(groupingsList),
     R.tail,
     R.map(

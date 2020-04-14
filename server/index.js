@@ -26,17 +26,5 @@ app.use('/static', express.static(dataDir))
 // https://nodejs.org/api/stream.html#stream_piping_to_writable_streams_from_async_iterators
 // use drain & pump functions from utils:
 // utils.drain(...), utils.pump(...)
-app.get('/byStation/:stationId', (req, res) => {
-  console.log('calling target endpoint', req)
-
-  transform(req.params.stationId)
-  console.log('in grps', jsonData)
-  res.json(jsonData)
-})
-
-app.get('/data/:stationId', (req, res) => {
-  console.log('jsonData', jsonData)
-  return res.end('yo')
-})
 
 app.listen(PORT, () => console.log(`your server is listening on port ${PORT}`))

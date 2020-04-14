@@ -32,8 +32,11 @@ const columns = [
   'lastUpdate',
 ]
 
-const parser = parse({columns, relax_column_count: true})
-const readable = fs.createReadStream(inputFilePath, {encoding: 'utf8'})
+const spreadListIntoMap = R.reduce(R.merge, {})
+
+const parser = parse({ columns, relax_column_count: true })
+const readable = fs.createReadStream(inputFilePath, { encoding: 'utf8' })
+
 const groupings = [R.prop('stationId'), R.prop('week')]
 
 module.exports = async function transform(dataKey) {
@@ -50,26 +53,22 @@ module.exports = async function transform(dataKey) {
 
       console.log('output', output)
 
-      const stations = Object.keys(output)
+      const stations = new Set(Object.keys(output))
 
       // Get unique stations
-      const stationMap = stations
-        .map(key => output[key])
-        .map(station => Object.keys(station))
-        .map(stationKeys => stationKeys.flat())
-        .flat()
-        .reduce((acc, curr) => acc.add(curr), new Set())
+      const stationMap = R.compose(
+        spreadListIntoMap,
+        R.map(value => ({ [value]: value })),
+      )([...stations])
 
-      // console.log('stationMap', stationMap)
       stations.forEach(station => {
-        console.log('station', station)
-        console.log('output[station]', output[station])
-
+        console.log(`writing ${station}.json`)
         fs.writeFileSync(
-          path.resolve(dataDir, 'station', `${station}.json`),
+          `./data/station/${station}.json`,
           JSON.stringify(output[station]),
         )
       })
+
       fs.writeFileSync(outputFilePath, JSON.stringify(output))
       fs.writeFileSync(stationMapPath, JSON.stringify(stationMap))
     })
